@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>논문 검색</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Semantic Scholar 논문 검색</h1>
+        <h2 style="text-align:center; color:#1976d2; margin-bottom:20px;">응용물리특강 이민재 사이트</h2>
+        <div style="display:flex; gap:30px;">
+            <div style="flex:2;">
+                <form method="post">
+                    <input type="text" name="question" placeholder="검색어를 입력하세요" required>
+                    <button type="submit">검색</button>
+                </form>
+                {% if related_keywords %}
+                    <div style="margin:10px 0;">
+                        <strong>관련 검색어:</strong>
+                        {% for kw in related_keywords %}
+                            <a href="{{ url_for('index', keyword=kw) }}" style="margin-right:8px; color:#1976d2;">{{ kw }}</a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if papers %}
+                    <div class="papers">
+                        <h2>관련 논문</h2>
+                        <ul>
+                            {% for paper in papers %}
+                                <li>
+                                    <a href="{{ paper['url'] }}" target="_blank">{{ paper['title'] }}</a>
+                                    <span>- {{ paper['authors'][0]['name'] if paper['authors'] else '' }}</span>
+                                    {% if paper['abstract'] %}
+                                        <div class="abstract">
+                                            <strong>초록:</strong> {{ paper['abstract'] }}
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+            <div style="flex:1;">
+                <div style="background:#f2f2f2; padding:15px; border-radius:8px;">
+                    <strong>검색 기록</strong>
+                    <ul>
+                        {% for q in search_history %}
+                            <li>{{ q }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
